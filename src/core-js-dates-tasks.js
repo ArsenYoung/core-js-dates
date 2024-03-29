@@ -319,8 +319,33 @@ function formatDate(date) {
  * 12, 2023 => 10
  * 1, 2024 => 8
  */
-function getCountWeekendsInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountWeekendsInMonth(month, year) {
+  const date = new Date(year, month - 1);
+  let daysInMonth = getCountDaysInMonth(month, year);
+  let currentDay = date.getDay();
+  const countWeekendDays = 2;
+  const countWorkingDays = 5;
+  const saturday = 6;
+  const sunday = 0;
+  let totalCountWeekendDays = 0;
+  while (daysInMonth > 0) {
+    if (currentDay === sunday) {
+      totalCountWeekendDays += countWeekendDays - 1;
+      daysInMonth -= countWorkingDays + 1;
+      currentDay = saturday;
+    } else if (currentDay === saturday) {
+      if (daysInMonth === 1) {
+        totalCountWeekendDays += countWeekendDays - 1;
+      } else {
+        totalCountWeekendDays += countWeekendDays;
+      }
+      daysInMonth -= countWeekendDays + countWorkingDays;
+    } else {
+      daysInMonth -= saturday - currentDay;
+      currentDay = saturday;
+    }
+  }
+  return totalCountWeekendDays;
 }
 
 /**
